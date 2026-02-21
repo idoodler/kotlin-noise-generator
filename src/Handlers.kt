@@ -184,7 +184,7 @@ private fun streamMjpg(
             streamLegacy(out, params, overlay)
         } else {
             val activeRenderer = renderer ?: return
-            val activeStreamer = if (mappedVariant != null || mappedPost != null || streamer == null) {
+            val activeStreamer = if (mappedVariant != null || streamer == null) {
                 MjpegStreamer(
                     boundary = "frame",
                     wireBoundary = "frame",
