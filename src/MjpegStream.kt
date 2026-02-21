@@ -33,13 +33,12 @@ enum class MjpegVariant {
  * Writes MJPG frames using the selected variant.
  */
 class MjpegStreamer(
-    private val boundary: String,
     private val wireBoundary: String,
     private val variant: MjpegVariant,
-    private val padBytes: Int,
+    padBytes: Int,
     private val chunkSize: Int,
-    private val preambleBytes: Int,
-    private val postambleBytes: Int
+    preambleBytes: Int,
+    postambleBytes: Int
 ) {
     private val boundaryBytes = "--$wireBoundary\r\n".toByteArray()
     private val headerPrefix = "Content-Type: image/jpeg\r\nContent-Length: ".toByteArray()

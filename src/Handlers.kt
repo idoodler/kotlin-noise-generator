@@ -78,15 +78,14 @@ class NoiseMjpgHandler : HttpHandler {
         val width = clampInt(params["width"], DEFAULT_WIDTH, MIN_WIDTH, MAX_STREAM_WIDTH)
         val height = clampInt(params["height"], DEFAULT_HEIGHT, MIN_HEIGHT, MAX_STREAM_HEIGHT)
         val fps = clampInt(params["fps"], DEFAULT_FPS, MIN_FPS, MAX_FPS)
-        val boundary = "frame"
         val variant = MjpegVariant.from(params["variant"])
         val padBytes = clampInt(params["pad"], 16, 0, 256)
         val chunkSize = clampInt(params["chunk"], 1024, 128, 8192)
         val preambleSize = clampInt(params["pre"], 16, 0, 256)
         val postambleSize = clampInt(params["post"], 16, 0, 256)
-        val wireBoundary = if (variant == MjpegVariant.WRONG_BOUNDARY) "wrongframe" else boundary
+        val wireBoundary = if (variant == MjpegVariant.WRONG_BOUNDARY) "wrongframe" else "frame"
         val renderer = NoiseRenderer(width, height)
-        val streamer = MjpegStreamer(boundary, wireBoundary, variant, padBytes, chunkSize, preambleSize, postambleSize)
+        val streamer = MjpegStreamer(wireBoundary, variant, padBytes, chunkSize, preambleSize, postambleSize)
 
         val cnt = REQUEST_COUNTER.getAndIncrement().toString()
         val overlay = overlayParams(
@@ -186,7 +185,6 @@ private fun streamMjpg(
             val activeRenderer = renderer ?: return
             val activeStreamer = if (mappedVariant != null || streamer == null) {
                 MjpegStreamer(
-                    boundary = "frame",
                     wireBoundary = "frame",
                     variant = mappedVariant ?: MjpegVariant.STANDARD,
                     padBytes = 16,
